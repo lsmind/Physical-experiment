@@ -5,6 +5,9 @@ from math import sqrt
 from functools import reduce
 from sympy import Symbol, diff, evalf, symbols
 from sympy.parsing.sympy_parser import parse_expr
+# Units dictionary #################################################
+units={'c':0.01,'d':0.1, 'm':0.001, 'k':1000, 'u':0.000001, 'n':0.000000001}
+
 # classes ###########################################################
 class Data(object):
 
@@ -17,7 +20,7 @@ class Data(object):
         return self._rxl
     @rxl.setter
     def rxl(self, value):
-        self._rxl = value
+        self._rxl = list(map(lambda x: x*self.unit, value))
     @property
     def ub(self):
         return self._ub
@@ -25,12 +28,24 @@ class Data(object):
     def ub(self,value=0):
         if len(self._rxl) > 1:
             value = value / sqrt(3)
-        self._ub = value
+        self._ub = value*self._unit
     @property
     def avg(self):
         add = lambda x,y: x+y
         n = len(self._rxl)
         return reduce(add, self._rxl)/n
+    @property
+    def unit(self):
+        return self._unit
+    @unit.setter
+    def unit(self,value=1):
+        try:
+            unit = units[value]
+        except KeyError:
+            print("输入错误,默认未1");
+            self._unit = 1
+        else:
+            self._unit = unit
 # ---------get sigma_x------------
     @property
     def sigma_x(self):
@@ -78,10 +93,12 @@ class Formula(object):
 # ------------function--------
 def list_in():
     strs = input()
-    strs.strip(" ")
-    return strs.split(" ")
+    listin = list(filter(lambda s: s and s.strip(), strs.split()))
+    return listin
 def var_in(var):
     newtest = Data()
+    print('输入%s的单位 c m k ...' % var)
+    newtest.unit = input()
     print('输入%s的列表 如: 1 1 1 1 1' % var)
     lists = list_in()
     lists = [float(lists[i]) for i in range(len(lists))]
@@ -100,8 +117,6 @@ def formula_in():
     print('请输入函数公式 如: x**y+3*x')
     newtest.formula = input()
     return newtest
-def add(x,y):
-    return x+y
 def main():
     form_list = formula_in()
     var_list =[]
@@ -113,7 +128,7 @@ def main():
 
     diff = form_list.diff(avg_list)
     xig = [ diff[i]*var_list[i].sigma_x for i in range(len(avg_list))]
-    sigma = sqrt(reduce(add, map(lambda x: x**2, xig)))
+    sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
     value = form_list.value(avg_list)
     Ex = sigma/value
     print('   @ = %f~%f   %e' % (value, sigma, Ex))
