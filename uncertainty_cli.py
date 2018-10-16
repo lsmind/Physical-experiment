@@ -3,22 +3,15 @@
 from fileIO import *
 from formula import *
 
-def file_in():
-    pass
-def file_out(filename,form_list):
-    file_dict = {"name":filename}
-    file_dict["vars"] = form_list.vars
-    file_dict["formula"] = str(form_list.formula)
-    for var in range(len(form_list.vars)):
-        file_dict[form_list.vars[var]] = str(form_list.varlist[var].rxl_t)+' '+str(form_list.varlist[var].unit_t)+' '+str(form_list.varlist[var].ub_t)
-    save(filename,file_dict)
 def screen_in():
     form_list = Formula()
     print('请输入变量列表 如: x y z t')
     form_list.vars = list_in()
     print('请输入函数公式 如 x**y+3*x')
     form_list.formula = input()
-    form_list.varlist_in(var_in)
+    for i in range(len(form_list.vars)):
+        element=var_in(form_list.vars[i])
+        form_list.varlist_in(element)
     output(form_list)
     print('是否保存 y/n')
     if (input() == 'y'):
@@ -51,7 +44,14 @@ def output(form_list):
     Ex = sigma/value
     print('   @ = %f~%f   %e' % (value, sigma, Ex))
 def main():
-    screen_in()
+    print('请输入需要读取的文件,不需要就乱输入')
+    file_name=input()
+    try:
+        open('./'+file_name+'.json','r')
+    except FileNotFoundError:
+        screen_in()
+    else:
+        file_in(file_name)
 
 # start main at last ################################################
 if __name__ == '__main__':

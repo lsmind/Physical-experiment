@@ -42,13 +42,14 @@ class Data(object):
     @unit.setter
     def unit(self,value=1):
         try:
-            self.unit_t=value
             unit = units[value]
         except KeyError:
             print("输入错误,默认未1");
             self._unit = 1
+            self.unit_t=value
         else:
             self._unit = unit
+            self.unit_t=value
 # ---------get sigma_x------------
     @property
     def sigma_x(self):
@@ -65,6 +66,8 @@ class Data(object):
         return sqrt(ua**2+ub**2)
 #----------object formula------------
 class Formula(object):
+    def __init__ (self):
+        self.varlist=[]
     @property
     def vars(self):
         return self._vars
@@ -80,11 +83,8 @@ class Formula(object):
     @formula.setter
     def formula(self,func):
         self._formula = parse_expr(func)
-    def varlist_in(self,vars_in):
-        var_list =[]
-        for i in range(len(self._vars)):
-            var_list.append(vars_in(self.vars[i]))
-        self.varlist = var_list
+    def varlist_in(self,element):
+        self.varlist.append(element)
 
     def value(self, avg):
         dicts = {}
