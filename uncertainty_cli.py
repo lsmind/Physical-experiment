@@ -5,8 +5,13 @@ from formula import *
 
 def file_in():
     pass
-def file_out():
-    pass
+def file_out(filename,form_list):
+    file_dict = {"name":filename}
+    file_dict["vars"] = form_list.vars
+    file_dict["formula"] = str(form_list.formula)
+    for var in range(len(form_list.vars)):
+        file_dict[form_list.vars[var]] = str(form_list.varlist[var].rxl_t)+' '+str(form_list.varlist[var].unit_t)+' '+str(form_list.varlist[var].ub_t)
+    save(filename,file_dict)
 def screen_in():
     form_list = Formula()
     print('请输入变量列表 如: x y z t')
@@ -16,8 +21,9 @@ def screen_in():
     form_list.varlist_in(var_in)
     output(form_list)
     print('是否保存 y/n')
-    if (input() == 'y')
-        file.out():
+    if (input() == 'y'):
+        print ('输入文件名：')
+        file_out(input(),form_list)
 def var_in(var):
     newtest = Data()
     print('输入%s的单位 c m k ...' % var)

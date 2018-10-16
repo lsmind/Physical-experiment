@@ -20,12 +20,14 @@ class Data(object):
         return self._rxl
     @rxl.setter
     def rxl(self, value):
+        self.rxl_t=value
         self._rxl = list(map(lambda x: x*self.unit, value))
     @property
     def ub(self):
         return self._ub
     @ub.setter
     def ub(self,value=0):
+        self.ub_t=value
         if len(self._rxl) > 1:
             value = value / sqrt(3)
         self._ub = value*self._unit
@@ -40,6 +42,7 @@ class Data(object):
     @unit.setter
     def unit(self,value=1):
         try:
+            self.unit_t=value
             unit = units[value]
         except KeyError:
             print("输入错误,默认未1");

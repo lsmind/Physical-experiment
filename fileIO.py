@@ -3,7 +3,7 @@
 import json
 
 def load(file_name):
-    with open('./file_name','r') as f:
+    with open('./'+file_name+'.json','r') as f:
         content = f.read()
         try:
             content_js = json.loads(content)
@@ -13,10 +13,11 @@ def load(file_name):
             return content_js
 
 def save(file_name,content):
-    with open('./file_name','w') as f:
+    with open('./'+file_name+'.json','w') as f:
         try:
             content_js = json.dumps(content)
         except KeyError:
             print("输入格式有误")
         else:
-            f.write(content_js)
+            content_js_r = str.replace(", ", ",\n")
+            f.write(content_js_r)
