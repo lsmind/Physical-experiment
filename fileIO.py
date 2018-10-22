@@ -50,7 +50,7 @@ def fvar_in(element):
     return newtest
 def output(form_list):
     for i in range(len(form_list.vars)):
-        print('%s = %f~%f' % (form_list.vars[i],form_list.varlist[i].avg, form_list.varlist[i].sigma_x))
+        print('%s = %e~%e' % (form_list.vars[i],form_list.varlist[i].avg, form_list.varlist[i].sigma_x))
     avg_list = [ form_list.varlist[i].avg for i in range(len(form_list.varlist))]
 
     diff = form_list.diff(avg_list)
@@ -58,4 +58,4 @@ def output(form_list):
     sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
     value = form_list.value(avg_list)
     Ex = sigma/value
-    print('   @ = %f~%f   %e' % (value, sigma, Ex))
+    print('   @ = %e~%e   %e' % (value, sigma, Ex))
