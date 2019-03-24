@@ -7,9 +7,9 @@
 本程序由私人在课余时间开发 欢迎和我交流
 
 ## 环境搭建
-python安装: <https://www.python.org/downloads/source/>
-pip安装：<https://pip.pypa.io/en/latest/installing/#id7>
-python依赖：
+python安装: <https://www.python.org/downloads/source/>  
+pip安装：<https://pip.pypa.io/en/latest/installing/#id7>  
+python依赖：  
 ```shell
 pip install sympy
 ```
