@@ -48,14 +48,6 @@ def fvar_in(element):
     newtest.rxl = element[0]
     newtest.ub = element[2]
     return newtest
-def output(form_list):
-    for i in range(len(form_list.vars)):
-        print('%s = %e~%e' % (form_list.vars[i],form_list.varlist[i].avg, form_list.varlist[i].sigma_x))
-    avg_list = [ form_list.varlist[i].avg for i in range(len(form_list.varlist))]
-
-    diff = form_list.diff(avg_list)
-    xig = [ diff[i]*form_list.varlist[i].sigma_x for i in range(len(avg_list))]
-    sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
-    value = form_list.value(avg_list)
-    Ex = sigma/value
-    print('   @ = %e~%e   %e' % (value, sigma, Ex))
+def output(str_list):
+    for result in str_list:
+        print(result)

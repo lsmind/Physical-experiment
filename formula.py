@@ -6,7 +6,7 @@ from functools import reduce
 from sympy import Symbol, diff, evalf, symbols
 from sympy.parsing.sympy_parser import parse_expr
 # Units dictionary #################################################
-units={'c':0.01,'d':0.1, 'm':0.001, 'k':1000, 'u':0.000001, 'n':0.000000001}
+units={'1':1, 'c':0.01, 'd':0.1, 'm':0.001, 'k':1000, 'u':0.000001, 'n':0.000000001}
 
 # classes ###########################################################
 class Data(object):
@@ -35,6 +35,7 @@ class Data(object):
     def avg(self):
         add = lambda x,y: x+y
         n = len(self._rxl)
+        print(self._rxl)
         return reduce(add, self._rxl)/n
     @property
     def unit(self):
@@ -98,6 +99,19 @@ class Formula(object):
             dicts[self.varsy[i]] = avg[i]
         df_vars =[ df[i].evalf(subs=dicts) for i in range(len(self.varsy))]
         return df_vars
+    def output(self):
+        result = []
+        for i in range(len(self.vars)):
+            result.append('%s = %e~%e' % (self.vars[i],self.varlist[i].avg, self.varlist[i].sigma_x))
+        avg_list = [ self.varlist[i].avg for i in range(len(self.varlist))]
+        diff = self.diff(avg_list)
+        xig = [ diff[i]*self.varlist[i].sigma_x for i in range(len(avg_list))]
+        sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
+        value = self.value(avg_list)
+        Ex = sigma/value
+        result.append('   @ = %e~%e   %e' % (value, sigma, Ex))
+        return result
+
 # ------------function--------
 def list_in():
     strs = input()

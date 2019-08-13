@@ -12,7 +12,7 @@ def screen_in():
     for i in range(len(form_list.vars)):
         element=var_in(form_list.vars[i])
         form_list.varlist_in(element)
-    output(form_list)
+    output(form_list.output())
     print('是否保存 y/n')
     if (input() == 'y'):
         print ('输入文件名：')
@@ -32,17 +32,6 @@ def var_in(var):
         print(e,'数据未输入，默认为0')
         newtest.ub=0
     return newtest
-def output(form_list):
-    for i in range(len(form_list.vars)):
-        print('%s = %e~%e' % (form_list.vars[i],form_list.varlist[i].avg, form_list.varlist[i].sigma_x))
-    avg_list = [ form_list.varlist[i].avg for i in range(len(form_list.varlist))]
-
-    diff = form_list.diff(avg_list)
-    xig = [ diff[i]*form_list.varlist[i].sigma_x for i in range(len(avg_list))]
-    sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
-    value = form_list.value(avg_list)
-    Ex = sigma/value
-    print('   @ = %e~%e   %e' % (value, sigma, Ex))
 def main():
     print('请输入需要读取的文件,不需要就乱输入')
     file_name=input()
