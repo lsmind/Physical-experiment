@@ -12,11 +12,11 @@ def screen_in():
     for i in range(len(form_list.vars)):
         element=var_in(form_list.vars[i])
         form_list.varlist_in(element)
-    output(form_list.output())
+    output(form_list)
     print('是否保存 y/n')
     if (input() == 'y'):
         print ('输入文件名：')
-        file_out(input(),form_list)
+        file_out('./'+input()+'.json',form_list)
 def var_in(var):
     newtest = Data()
     print('输入%s的单位 c m k ...' % var)
@@ -35,12 +35,13 @@ def var_in(var):
 def main():
     print('请输入需要读取的文件,不需要就乱输入')
     file_name=input()
+    file_name= './'+file_name+'.json'
     try:
-        open('./'+file_name+'.json','r')
+        open(file_name,'r')
     except FileNotFoundError:
         screen_in()
     else:
-        file_in(file_name)
+        output(file_in(file_name))
 
 # start main at last ################################################
 if __name__ == '__main__':

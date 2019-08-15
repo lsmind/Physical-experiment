@@ -4,7 +4,7 @@ import json
 from formula import *
 
 def load(file_name):
-    with open('./'+file_name+'.json','r') as f:
+    with open(file_name,'r') as f:
         content = f.read()
         try:
             content_js = json.loads(content)
@@ -14,7 +14,7 @@ def load(file_name):
             return content_js
 
 def save(file_name,content):
-    with open('./'+file_name+'.json','w') as f:
+    with open(file_name,'w') as f:
         try:
             content_js = json.dumps(content)
         except KeyError:
@@ -23,9 +23,9 @@ def save(file_name,content):
             content_js_r = content_js.replace(", ", ",\n")
             f.write(content_js_r)
 def file_out(filename,form_list):
-    file_dict = {"name":filename}
+    file_dict = {}
     file_dict["vars"] = form_list.vars
-    file_dict["formula"] = str(form_list.formula)
+    file_dict["formula"] = form_list.formula_t
     for var in range(len(form_list.vars)):
         list_i = []
         list_i.append(form_list.varlist[var].rxl_t)
@@ -41,13 +41,14 @@ def file_in(filename):
     for i in range(len(form_list.vars)):
         element = contain[form_list.vars[i]]
         form_list.varlist_in(fvar_in(element))
-    output(form_list)
+    return form_list
 def fvar_in(element):
     newtest = Data()
     newtest.unit = element[1]
     newtest.rxl = element[0]
     newtest.ub = element[2]
     return newtest
-def output(str_list):
+def output(form_list):
+    str_list = form_list.output()
     for result in str_list:
         print(result)

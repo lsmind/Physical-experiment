@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from math import sqrt
@@ -35,7 +35,6 @@ class Data(object):
     def avg(self):
         add = lambda x,y: x+y
         n = len(self._rxl)
-        print(self._rxl)
         return reduce(add, self._rxl)/n
     @property
     def unit(self):
@@ -83,6 +82,7 @@ class Formula(object):
         return self._formula
     @formula.setter
     def formula(self,func):
+        self.formula_t = func
         self._formula = parse_expr(func)
     def varlist_in(self,element):
         self.varlist.append(element)

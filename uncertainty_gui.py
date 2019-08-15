@@ -6,6 +6,12 @@ import sys
 from PyQt5 import QtWidgets
 import GUIwidget
 import formula
+import fileIO
+
+class extroApp(QtWidgets.QWidget, GUIwidget.Ui_frmIntro):
+    def __init__(self, content, parent=None):
+        super(extroApp, self).__init__(parent)
+        self.setupUi(self, content)
 
 class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
     """ MainApp for create a class to use GUI """
@@ -13,9 +19,13 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
     def __init__(self,parent=None):
         super(MainApp, self).__init__(parent)
         self.setupUi(self)
+        self.wndLicence = extroApp('licence')
+        self.wndAnthor = extroApp('anthor')
+        self.wndUsage = extroApp('usage')
         # 数据结构
         self.dataSet={} # {'x':Data()}
-        # 按键操作
+        self.fileName=None
+        # 信息槽
         self.btnAddVar.clicked.connect(self.add_variable)
         self.btnDelVar.clicked.connect(self.del_variable)
         self.btnCompute.clicked.connect(self.compute)
@@ -24,6 +34,59 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.lstVar.itemClicked.connect(self.on_lstVar_lstData)
         self.cbbUnit.currentTextChanged.connect(self.unit_change)
         self.lndError.editingFinished.connect(self.error_input)
+        self.actLicence.triggered.connect(self.wndLicence.show)
+        self.actAnthor.triggered.connect(self.wndAnthor.show)
+        self.actUsage.triggered.connect(self.wndUsage.show)
+        self.actOpen.triggered.connect(self.openFile)
+        self.actSave.triggered.connect(self.saveFile)
+        self.actSaveAs.triggered.connect(self.saveAsFile)
+
+    def saveAsFile(self):
+        self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
+        self.saveFile()
+    def saveFile(self):
+        try:
+            form_list = formula.Formula()
+            form_list.vars = list(self.dataSet.keys())
+            form_list.formula = self.lndFormula.text()
+            form_list.varlist = list(self.dataSet.values())
+        except SyntaxError as e:
+            QtWidgets.QMessageBox.critical(self, '错误',
+                    '数据不完善 \n错误原因: '+str(e),
+                    QtWidgets.QMessageBox.Yes,
+                    QtWidgets.QMessageBox.Yes)
+            return -1
+        if self.fileName is None:
+            self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
+        try:
+            fileIO.file_out(self.fileName, form_list)
+        except FileNotFoundError as e:
+            QtWidgets.QMessageBox.critical(self, '错误',
+                    '无法保存数据 \n错误原因: '+str(e),
+                    QtWidgets.QMessageBox.Yes,
+                    QtWidgets.QMessageBox.Yes)
+            return -1
+        
+    def openFile(self):
+        # 打开文件
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "Json Files (*.json)")
+        try:
+            form_list = fileIO.file_in(fileName)
+        except FileNotFoundError as e:
+            QtWidgets.QMessageBox.critical(self, '错误',
+                    '文件无法读取 \n错误原因: '+str(e),
+                    QtWidgets.QMessageBox.Yes,
+                    QtWidgets.QMessageBox.Yes)
+            return -1
+        # 添加进当下文件
+        self.fileName = fileName
+        # 显示文件内容
+        self.lndFormula.setText(form_list.formula_t)
+        self.dataSet = dict(zip(form_list.vars, form_list.varlist))
+        self.lstVar.clear()
+        for varName in self.dataSet.keys():
+            self.lstVar.addItem(varName)
+            self.on_lstVar_lstData()
 
     def add_variable(self):
         # 获取输入框的值
@@ -71,7 +134,7 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         # 获取输入框的值
         varName=self.lndData.text()
         # 输入框的值不能为空
-        if varName == '' or not varName.isdigit():
+        if varName == '' or not varName.replace('.','').isdigit():
             # 清空输入框
             self.lndData.clear()
             return None
@@ -126,25 +189,37 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             return 1
 
     def error_input(self):
+        error = self.lndError.text()
+        if not error.replace('.','').isdigit():
+            # 清空输入框
+            self.lndError.clear()
+            return None
         try:
-            self.currentData.ub = float(self.lndError.text())
+            self.currentData.ub = float(error)
         except AttributeError:
             return 1
 
     def compute(self):
-        form_list = formula.Formula()
-        form_list.vars = list(self.dataSet.keys())
-        form_list.formula = self.lndFormula.text()
-        form_list.varlist = list(self.dataSet.values())
-        results = ''
-        for result in  form_list.output():
-            results = results + '\n' + result
-        choose = QtWidgets.QMessageBox.information(self, '结果',
-            results+'\n   是否需要保存',
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-            QtWidgets.QMessageBox.No)
-        if choose == QtWidgets.QMessageBox.Yes:
-            pass
+        try:
+            form_list = formula.Formula()
+            form_list.vars = list(self.dataSet.keys())
+            form_list.formula = self.lndFormula.text()
+            form_list.varlist = list(self.dataSet.values())
+            results = ''
+            for result in  form_list.output():
+                results = results + '\n' + result
+            choose = QtWidgets.QMessageBox.information(self, '结果',
+                results+'\n   是否需要保存',
+                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                QtWidgets.QMessageBox.No)
+            if choose == QtWidgets.QMessageBox.Yes:
+                self.saveFile()
+        except BaseException as e:
+            QtWidgets.QMessageBox.critical(self, '错误',
+                    '程序无法完成计算 \n错误原因: '+str(e),
+                    QtWidgets.QMessageBox.Yes,
+                    QtWidgets.QMessageBox.Yes)
+            return -1
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
