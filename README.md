@@ -6,15 +6,12 @@
 ## 概述
 本程序由私人在课余时间开发 欢迎和我交流
 
-## 环境搭建
-python安装: <https://www.python.org/downloads/source/>  
-pip安装：<https://pip.pypa.io/en/latest/installing/#id7>  
-python依赖：  
-```shell
-pip install sympy
+###依赖
+```
+sympy
 ```
 
-## 使用
+## 使用 ""命令行版"
 ### 启动
 ```shell
 python uncertainty_cli.py
@@ -49,5 +46,6 @@ $ n
 
 ## 源文件查看
 - [python命令行启动](./uncertainty_cli.py)
+- [python图形界面启动](./uncertainty_gui.py)
 
 [回到首页](#readme)
