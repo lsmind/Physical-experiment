@@ -102,14 +102,14 @@ class Formula(object):
     def output(self):
         result = []
         for i in range(len(self.vars)):
-            result.append('%s = %e~%e' % (self.vars[i],self.varlist[i].avg, self.varlist[i].sigma_x))
+            result.append('%s = %e\t\t~%e' % (self.vars[i],self.varlist[i].avg, self.varlist[i].sigma_x))
         avg_list = [ self.varlist[i].avg for i in range(len(self.varlist))]
         diff = self.diff(avg_list)
         xig = [ diff[i]*self.varlist[i].sigma_x for i in range(len(avg_list))]
         sigma = sqrt(reduce(lambda x,y: x+y , map(lambda x: x**2, xig)))
         value = self.value(avg_list)
         Ex = sigma/value
-        result.append('   @ = %e~%e   %e' % (value, sigma, Ex))
+        result.append('   @ = %e\t\t~%e   %e' % (value, sigma, Ex))
         return result
 
 # ------------function--------

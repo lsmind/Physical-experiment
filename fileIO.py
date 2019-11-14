@@ -3,6 +3,18 @@
 import json
 from formula import *
 
+def load_form(file_name):
+    lst = [] 
+    with open(file_name,'r') as f:
+        for each_form in f.readlines():
+            lst.append(each_form.replace("\n", "").replace("^","**"))
+    return lst
+
+def save_form(file_name, lst):
+    with open(file_name,'w') as f:
+        for each_form in lst:
+            f.write(each_form)
+
 def load(file_name):
     with open(file_name,'r') as f:
         content = f.read()
