@@ -1,0 +1,1 @@
+2 ** .5 * pi * f / C * ((epI * uI - uR * epR) + ((uI * epI - uR * epR) ** 2 + (uR * epI + uI * epR)) ** .5) ** .5

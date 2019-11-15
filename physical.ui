@@ -98,16 +98,6 @@
           </item>
          </layout>
         </item>
-        <item>
-         <widget class="QLabel" name="lblForm">
-          <property name="text">
-           <string>#dfs
-
-
-</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -388,6 +378,8 @@
     <addaction name="actOpen"/>
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
+    <addaction name="actOpenForm"/>
+    <addaction name="actSaveForm"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="font">
@@ -435,6 +427,21 @@
   <action name="actLicence">
    <property name="text">
     <string>许可证</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>打开公式</string>
+   </property>
+  </action>
+  <action name="actOpenForm">
+   <property name="text">
+    <string>打开公式</string>
+   </property>
+  </action>
+  <action name="actSaveForm">
+   <property name="text">
+    <string>保存公式</string>
    </property>
   </action>
  </widget>

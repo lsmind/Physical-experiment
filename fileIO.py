@@ -37,7 +37,6 @@ def save(file_name,content):
 def file_out(filename,form_list):
     file_dict = {}
     file_dict["vars"] = form_list.vars
-    file_dict["formula"] = form_list.formula_t
     for var in range(len(form_list.vars)):
         list_i = []
         list_i.append(form_list.varlist[var].rxl_t)
@@ -49,7 +48,6 @@ def file_in(filename):
     contain = load(filename)
     form_list = Formula()
     form_list.vars = contain['vars']
-    form_list.formula = contain['formula']
     for i in range(len(form_list.vars)):
         element = contain[form_list.vars[i]]
         form_list.varlist_in(fvar_in(element))
