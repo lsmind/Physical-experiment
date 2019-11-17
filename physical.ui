@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>757</width>
-    <height>576</height>
+    <width>756</width>
+    <height>585</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,20 +19,44 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QLabel" name="label_6">
-          <property name="font">
-           <font>
-            <family>思源黑体 CN</family>
-           </font>
-          </property>
-          <property name="text">
-           <string>公式</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <family>思源黑体 CN</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>公式</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblForm">
+            <property name="text">
+             <string>#1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QListWidget" name="lstForm">
@@ -40,6 +64,12 @@
            <font>
             <family>思源黑体 CN</family>
            </font>
+          </property>
+          <property name="dragEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
           </property>
          </widget>
         </item>
@@ -103,22 +133,46 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <family>思源黑体 CN</family>
-           </font>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>变量列表</string>
-          </property>
-          <property name="buddy">
-           <cstring>lstVar</cstring>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>思源黑体 CN</family>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>变量</string>
+            </property>
+            <property name="buddy">
+             <cstring>lstVar</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblVar">
+            <property name="text">
+             <string>#1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QListWidget" name="lstVar">
@@ -126,6 +180,15 @@
            <font>
             <family>思源黑体 CN</family>
            </font>
+          </property>
+          <property name="dragEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropOverwriteMode">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
           </property>
          </widget>
         </item>
@@ -177,19 +240,43 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QLabel" name="label_5">
-          <property name="font">
-           <font>
-            <family>思源黑体 CN</family>
-           </font>
-          </property>
-          <property name="text">
-           <string>数据列表</string>
-          </property>
-          <property name="buddy">
-           <cstring>lstData</cstring>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="font">
+             <font>
+              <family>思源黑体 CN</family>
+             </font>
+            </property>
+            <property name="text">
+             <string>数值</string>
+            </property>
+            <property name="buddy">
+             <cstring>lstData</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblData">
+            <property name="text">
+             <string>#1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QListWidget" name="lstData">
@@ -197,6 +284,12 @@
            <font>
             <family>思源黑体 CN</family>
            </font>
+          </property>
+          <property name="dragEnabled">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
           </property>
          </widget>
         </item>
@@ -244,66 +337,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="font">
-             <font>
-              <family>思源黑体 CN</family>
-             </font>
-            </property>
-            <property name="text">
-             <string>单位</string>
-            </property>
-            <property name="buddy">
-             <cstring>cbbUnit</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="cbbUnit">
-            <property name="font">
-             <font>
-              <family>思源黑体 CN</family>
-             </font>
-            </property>
-            <item>
-             <property name="text">
-              <string>1</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>k</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>d</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>c</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>m</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>u</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>n</string>
-             </property>
-            </item>
-           </widget>
-          </item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
            <widget class="QLabel" name="label_4">
             <property name="font">
@@ -312,15 +346,15 @@
              </font>
             </property>
             <property name="text">
-             <string>误差</string>
+             <string>单位 10的</string>
             </property>
             <property name="buddy">
-             <cstring>lndError</cstring>
+             <cstring>lndUnit</cstring>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lndError">
+           <widget class="QLineEdit" name="lndUnit">
             <property name="font">
              <font>
               <family>思源黑体 CN</family>
@@ -334,6 +368,13 @@
             </property>
             <property name="text">
              <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>次方</string>
             </property>
            </widget>
           </item>
@@ -360,7 +401,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>757</width>
+     <width>756</width>
      <height>29</height>
     </rect>
    </property>

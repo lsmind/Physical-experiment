@@ -40,8 +40,6 @@ def file_out(filename,form_list):
     for var in range(len(form_list.vars)):
         list_i = []
         list_i.append(form_list.varlist[var].rxl_t)
-        list_i.append(form_list.varlist[var].unit_t)
-        list_i.append(form_list.varlist[var].ub_t)
         file_dict[form_list.vars[var]] = list_i
     save(filename,file_dict)
 def file_in(filename):

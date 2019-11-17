@@ -25,7 +25,11 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         # 数据结构
         self.dataSet={} # {'x':Data()}
         self.fileName=None
+        self.fileFormName=None
         # 信息槽
+        self.lstForm.currentRowChanged.connect(self.updateFormRow)
+        self.lstVar.currentRowChanged.connect(self.updateVarRow)
+        self.lstData.currentRowChanged.connect(self.updateDataRow)
         self.lndData.returnPressed.connect(self.add_data)
         self.lndVar.returnPressed.connect(self.add_variable)
         self.lndForm.returnPressed.connect(self.add_formula)
@@ -38,8 +42,6 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.btnDelData.clicked.connect(self.del_data)
         self.lstForm.itemDoubleClicked.connect(self.editForm)
         self.lstVar.itemClicked.connect(self.on_lstVar_lstData)
-        self.cbbUnit.currentTextChanged.connect(self.unit_change)
-        self.lndError.editingFinished.connect(self.error_input)
         self.actLicence.triggered.connect(self.wndLicence.show)
         self.actAnthor.triggered.connect(self.wndAnthor.show)
         self.actUsage.triggered.connect(self.wndUsage.show)
@@ -48,7 +50,12 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.actOpenForm.triggered.connect(self.openFormFile)
         self.actSaveForm.triggered.connect(self.saveFormFile)
         self.actSaveAs.triggered.connect(self.saveAsFile)
-
+    def updateFormRow(self):
+        self.lblForm.setText(str(1 + self.lstForm.currentRow()))
+    def updateDataRow(self):
+        self.lblData.setText(str(1 + self.lstData.currentRow()))
+    def updateVarRow(self):
+        self.lblVar.setText(str(1 + self.lstVar.currentRow()))
     def add_formula(self):
         # 获取输入框的值
         varName=self.lndForm.text()
@@ -86,10 +93,10 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
                     QtWidgets.QMessageBox.Yes,
                     QtWidgets.QMessageBox.Yes)
             return -1
-        if self.fileName is None:
-            self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Text Files (*.txt)")
+        if self.fileFormName is None:
+            self.fileFormName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Text Files (*.txt)")
         try:
-            fileIO.save_form(self.fileName, formulas)
+            fileIO.save_form(self.fileFormName+'.txt', formulas)
         except FileNotFoundError as e:
             QtWidgets.QMessageBox.critical(self, '错误',
                     '无法保存数据 \n错误原因: '+str(e),
@@ -111,7 +118,7 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         if self.fileName is None:
             self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
         try:
-            fileIO.file_out(self.fileName, form_list)
+            fileIO.file_out(self.fileName+'.json', form_list)
         except FileNotFoundError as e:
             QtWidgets.QMessageBox.critical(self, '错误',
                     '无法保存数据 \n错误原因: '+str(e),
@@ -234,23 +241,10 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         for Number in self.currentData.rxl_t:
             self.lstData.addItem(str(Number))
         # 更新单位
-        self.cbbUnit.setCurrentText(self.currentData.unit_t)
         # 更新误差
-        self.lndError.setText(str(self.currentData.ub_t))
     def unit_change(self):
         try:
-            self.currentData.unit_t = self.cbbUnit.currentText()
             self.currentData.rxl = self.currentData.rxl_t
-        except AttributeError:
-            return 1
-    def error_input(self):
-        error = self.lndError.text()
-        if not error.replace('.','').isdigit():
-            # 清空输入框
-            self.lndError.clear()
-            return None
-        try:
-            self.currentData.ub = float(error)
         except AttributeError:
             return 1
     def compute(self):
@@ -263,7 +257,7 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             results = ''
             for result in  form_list.output():
                 results = results + '\n' + result
-            self.txtInfo.append('<info> 公式' + formText + '计算结果为: ' + results)
+            self.txtInfo.append('<info> 公式' + str(self.lstForm.currentRow()) + '计算结果为: ' + results)
         except BaseException as e:
             self.txtInfo.append('<error> 程序无法完成计算, 错误原因: '+str(e))
             return -1
