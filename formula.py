@@ -6,7 +6,6 @@ from functools import reduce
 from sympy import Symbol, evalf, symbols
 from sympy.parsing.sympy_parser import parse_expr
 # Units dictionary #################################################
-units={'1':1, 'c':0.01, 'd':0.1, 'm':0.001, 'k':1000, 'u':0.000001, 'n':0.000000001}
 
 # classes ###########################################################
 class Data(object):
@@ -21,21 +20,20 @@ class Data(object):
     @rxl.setter
     def rxl(self, value):
         self.rxl_t=value
-        self._rxl = list(map(lambda x: x*self.unit, value))
+        self._rxl = list(map(lambda x: x * self.unit, value))
     @property
     def unit(self):
         return self._unit
     @unit.setter
     def unit(self,value=1):
         try:
-            unit = units[value]
+            unit = 10 ** float(value)
         except KeyError:
             print("输入错误,默认未1");
             self._unit = 1
-            self.unit_t=value
         else:
             self._unit = unit
-            self.unit_t=value
+        self.unit_t=value
 class Formula(object):
     def __init__ (self):
         self.varlist=[]
@@ -65,12 +63,13 @@ class Formula(object):
         return self._formula.evalf(subs=dicts)
     def output(self):
         result = ["result:"]
-        for j in range(len(self.varlist[-1].rxl)):
+        maxlist=max([len(i.rxl) for i in self.varlist])
+        for j in range(maxlist):
             avg_list = [];
             for i in range(len(self.varlist)):
-                max = len(self.varlist[i].rxl) - 1
-                if max < j:
-                    item = self.varlist[i].rxl[max]
+                maxs = len(self.varlist[i].rxl) - 1
+                if maxs < j:
+                    item = self.varlist[i].rxl[maxs]
                 else:
                     item = self.varlist[i].rxl[j]
                 avg_list.append(item)

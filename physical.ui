@@ -416,11 +416,28 @@
     <property name="title">
      <string>文件</string>
     </property>
-    <addaction name="actOpen"/>
-    <addaction name="actSave"/>
-    <addaction name="actSaveAs"/>
-    <addaction name="actOpenForm"/>
-    <addaction name="actSaveForm"/>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>公式</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="actFormOpen"/>
+     <addaction name="actFormSave"/>
+     <addaction name="actFormSaveAs"/>
+     <addaction name="actFormAdd"/>
+    </widget>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>数据</string>
+     </property>
+     <addaction name="actVarOpen"/>
+     <addaction name="actVarSave"/>
+     <addaction name="actVarSaveAs"/>
+     <addaction name="actVarAdd"/>
+    </widget>
+    <addaction name="actNew"/>
+    <addaction name="menu"/>
+    <addaction name="menu_2"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="font">
@@ -440,16 +457,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuAbout"/>
   </widget>
-  <action name="actOpen">
-   <property name="text">
-    <string>打开</string>
-   </property>
-  </action>
-  <action name="actSave">
-   <property name="text">
-    <string>保存</string>
-   </property>
-  </action>
   <action name="actUsage">
    <property name="text">
     <string>用法</string>
@@ -483,6 +490,51 @@
   <action name="actSaveForm">
    <property name="text">
     <string>保存公式</string>
+   </property>
+  </action>
+  <action name="actFormOpen">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="actFormSave">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actFormSaveAs">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="actFormAdd">
+   <property name="text">
+    <string>添加</string>
+   </property>
+  </action>
+  <action name="actNew">
+   <property name="text">
+    <string>新建</string>
+   </property>
+  </action>
+  <action name="actVarOpen">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="actVarSave">
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actVarSaveAs">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="actVarAdd">
+   <property name="text">
+    <string>添加</string>
    </property>
   </action>
  </widget>

@@ -26,7 +26,10 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.dataSet={} # {'x':Data()}
         self.fileName=None
         self.fileFormName=None
+        self.addForm = True
+        self.add = True
         # 信息槽
+        self.lndUnit.editingFinished.connect(self.unit_change)
         self.lstForm.currentRowChanged.connect(self.updateFormRow)
         self.lstVar.currentRowChanged.connect(self.updateVarRow)
         self.lstData.currentRowChanged.connect(self.updateDataRow)
@@ -45,11 +48,21 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.actLicence.triggered.connect(self.wndLicence.show)
         self.actAnthor.triggered.connect(self.wndAnthor.show)
         self.actUsage.triggered.connect(self.wndUsage.show)
-        self.actOpen.triggered.connect(self.openFile)
-        self.actSave.triggered.connect(self.saveFile)
-        self.actOpenForm.triggered.connect(self.openFormFile)
-        self.actSaveForm.triggered.connect(self.saveFormFile)
-        self.actSaveAs.triggered.connect(self.saveAsFile)
+        self.actVarOpen.triggered.connect(self.openFile)
+        self.actVarSave.triggered.connect(self.saveFile)
+        self.actVarSaveAs.triggered.connect(self.saveAsFile)
+        self.actVarAdd.triggered.connect(self.openFileAdd)
+        self.actFormOpen.triggered.connect(self.openFormFile)
+        self.actFormSave.triggered.connect(self.saveFormFile)
+        self.actFormSaveAs.triggered.connect(self.saveAsFormFile)
+        self.actFormAdd.triggered.connect(self.openFormFileAdd)
+        self.actNew.triggered.connect(self.cleanAll)
+    def cleanAll(self):
+        self.lndUnit.clear()
+        self.lstForm.clear()
+        self.lstVar.clear()
+        self.lstData.clear()
+        self.txtInfo.clear()
     def updateFormRow(self):
         self.lblForm.setText(str(1 + self.lstForm.currentRow()))
     def updateDataRow(self):
@@ -78,6 +91,64 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             # 删除数据
         except AttributeError:
             return 1
+    def openFormFileAdd(self):
+        self.addForm = False
+        self.openFormFile()
+        self.addForm = True
+    def openFileAdd(self):
+        self.add = False
+        self.openFile()
+        self.add = True
+    def openFile(self):
+        # 打开文件
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "Json Files (*.json)\n Text Files (*.txt)")
+        extend = fileName.split('.')[-1]
+        if extend == "json":
+            try:
+                form_list = fileIO.file_in(fileName)
+            except FileNotFoundError as e:
+                QtWidgets.QMessageBox.critical(self, '错误',
+                        '文件无法读取 \n错误原因: '+str(e),
+                        QtWidgets.QMessageBox.Yes,
+                        QtWidgets.QMessageBox.Yes)
+                return -1
+            # 添加进当下文件
+            self.fileName = fileName
+            # 显示文件内容
+            if(self.add):
+                self.dataSet = dict(zip(form_list.vars, form_list.varlist))
+                self.lstVar.clear()
+                for varName in self.dataSet.keys():
+                    self.lstVar.addItem(varName)
+                    self.on_lstVar_lstData()
+            else:
+                dataSet = dict(zip(form_list.vars, form_list.varlist))
+                for varName in dataSet.keys():
+                    if not varName in [ self.lstVar.item(x).text() for x in range(self.lstVar.count()) ]:
+                        self.lstVar.addItem(varName)
+                        self.dataSet[varName] = dataSet[varName]
+                        self.on_lstVar_lstData()
+    def openFormFile(self):
+        try:
+            fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "Text Files (*.txt)")
+            form_list = fileIO.load_form(fileName)
+            if(self.addForm):
+                self.lstForm.clear()
+                for forms in form_list:
+                    self.lstForm.addItem(forms)
+            else:
+                for forms in form_list:
+                    if not forms in [ self.lstForm.item(x).text() for x in range(self.lstForm.count()) ]:
+                        self.lstForm.addItem(forms)
+        except FileNotFoundError as e:
+            QtWidgets.QMessageBox.critical(self, '错误',
+                    '文件无法读取 \n错误原因: '+str(e),
+                    QtWidgets.QMessageBox.Yes,
+                    QtWidgets.QMessageBox.Yes)
+            return -1
+    def saveAsFormFile(self):
+        self.fileFormName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
+        self.saveFile()
     def saveAsFile(self):
         self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
         self.saveFile()
@@ -95,8 +166,10 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             return -1
         if self.fileFormName is None:
             self.fileFormName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Text Files (*.txt)")
+        if self.fileFormName.split('.')[-1] != 'txt':
+            self.fileFormName=self.fileName+'.txt'
         try:
-            fileIO.save_form(self.fileFormName+'.txt', formulas)
+            fileIO.save_form(self.fileFormName, formulas)
         except FileNotFoundError as e:
             QtWidgets.QMessageBox.critical(self, '错误',
                     '无法保存数据 \n错误原因: '+str(e),
@@ -117,49 +190,21 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             return -1
         if self.fileName is None:
             self.fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, "选取文件", "./", "Json Files (*.json)")
+        if self.fileName.split('.')[-1] != 'json':
+            self.fileName=self.fileName+'.json'
         try:
-            fileIO.file_out(self.fileName+'.json', form_list)
+            fileIO.file_out(self.fileName, form_list)
         except FileNotFoundError as e:
             QtWidgets.QMessageBox.critical(self, '错误',
                     '无法保存数据 \n错误原因: '+str(e),
                     QtWidgets.QMessageBox.Yes,
                     QtWidgets.QMessageBox.Yes)
             return -1
-    def openFormFile(self):
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "Text Files (*.txt)")
-        self.addFormLst(fileName)
-    def addFormLst(self, fileName):
-        form_list = fileIO.load_form(fileName)
-        for forms in form_list:
-            self.lstForm.addItem(forms)
-    def openFile(self):
-        # 打开文件
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "Json Files (*.json)\n Text Files (*.txt)")
-        extend = fileName.split('.')[-1]
-        if extend == "json":
-            try:
-                form_list = fileIO.file_in(fileName)
-            except FileNotFoundError as e:
-                QtWidgets.QMessageBox.critical(self, '错误',
-                        '文件无法读取 \n错误原因: '+str(e),
-                        QtWidgets.QMessageBox.Yes,
-                        QtWidgets.QMessageBox.Yes)
-                return -1
-            # 添加进当下文件
-            self.fileName = fileName
-            # 显示文件内容
-            self.dataSet = dict(zip(form_list.vars, form_list.varlist))
-            self.lstVar.clear()
-            for varName in self.dataSet.keys():
-                self.lstVar.addItem(varName)
-                self.on_lstVar_lstData()
-        elif extend == "txt":
-            self.addFormLst(fileName)
     def add_variable(self):
         # 获取输入框的值
         varName=self.lndVar.text()
         # 不为空且不为数字
-        if varName == '' or not varName.isalpha():
+        if varName == '' or not varName[0].isalpha():
             # 清空输入
             self.lndVar.clear()
             return None
@@ -173,11 +218,9 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         self.dataSet[varName] = currentData = formula.Data()
         # 数据初始化
         ## 单位
-        currentData.unit='1'
+        currentData.unit=self.lndUnit.text()
         ## 数据表
         currentData.rxl=[]
-        ## 误差
-        currentData.ub=.0
         # 添加列表
         self.lstVar.addItem(varName)
         # 清空输入框
@@ -241,9 +284,11 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
         for Number in self.currentData.rxl_t:
             self.lstData.addItem(str(Number))
         # 更新单位
+        self.lndUnit.setText(self.currentData.unit_t)
         # 更新误差
     def unit_change(self):
         try:
+            self.currentData.unit = self.lndUnit.text()
             self.currentData.rxl = self.currentData.rxl_t
         except AttributeError:
             return 1
@@ -257,7 +302,7 @@ class MainApp(QtWidgets.QMainWindow, GUIwidget.Ui_MainWindow):
             results = ''
             for result in  form_list.output():
                 results = results + '\n' + result
-            self.txtInfo.append('<info> 公式' + str(self.lstForm.currentRow()) + '计算结果为: ' + results)
+            self.txtInfo.append('<info> 公式' + str(1 + self.lstForm.currentRow()) + '计算结果为: ' + results)
         except BaseException as e:
             self.txtInfo.append('<error> 程序无法完成计算, 错误原因: '+str(e))
             return -1
